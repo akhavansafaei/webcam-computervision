@@ -1,0 +1,166 @@
+# Smart Mirror Configuration
+
+# Camera Settings
+camera:
+  index: 0
+  width: 320        # Lower = faster (480, 320, 240)
+  height: 240       # Recommended: 320x240 for GTX 1650
+  fps: 15           # Lower = faster (30, 20, 15)
+
+# Face Detection
+face_detection:
+  min_confidence: 0.5
+  min_face_size: 120            # Higher = faster (80, 100, 120, 150)
+  use_yolo_if_gpu: false        # false = MediaPipe (recommended for 1650)
+  frame_skip: 2                 # Process every Nth frame (1, 2, 3)
+
+# Face Analysis Features
+face_analysis:
+  # Enable/Disable Features (disable unused = faster!)
+  analyze_age: true             # Memory: ~300MB | Speed: Medium
+  analyze_gender: true          # Memory: ~200MB | Speed: Fast
+  analyze_emotion: flase         # Memory: ~400MB | Speed: Slow
+  
+  # Model Settings
+  model: "Facenet"              # Facenet (light) | VGG-Face | ArcFace (heavy)
+  detector_backend: "skip"      # ALWAYS keep this as "skip"
+  
+  # Timing
+  analysis_interval: 10.0       # Seconds between analyses (higher = faster)
+  similarity_threshold: 0.60    # For face matching
+  
+  # Performance Options
+  use_gpu: true                 # Use GPU for analysis (recommended)
+  enable_analysis: true         # Disable all analysis for max speed
+
+# Session Management
+session:
+  timeout: 3.0                  # Seconds before ending session
+
+# AI Message Generation
+ai_message:
+  enabled: false                # false = static messages (faster, no API)
+  use_cache: true               # Cache LLM messages to save API calls
+  
+  # Static messages (used when enabled: false)
+  static_messages:
+    welcome: "به نمایشگاه الکامپ خوش آمدید! 🎉"
+    returning: "خوشحالیم دوباره میبینیمتون! ✨"
+    default: "به آینه هوشمند الکامپ اصفهان خوش آمدید! 🎥"
+
+# OpenAI API (only used when ai_message.enabled: true)
+openai:
+  model: "gpt-4o-mini"
+  temperature: 0.9
+  max_tokens: 150
+  
+# AI Prompts (only used when ai_message.enabled: true)
+prompts:
+  system: |
+    تو یک دستیار خلاق و الهام‌بخش در نمایشگاه الکامپ اصفهان هستی.
+    
+    قوانین مهم:
+    - هرگز به دفعات بازدید اشاره نکن
+    - اگر شخص امروز دوباره اومد، حتما یک بیت حافظ برای امروزش بده
+    - پیام‌ها باید الهام‌بخش، مثبت و خلاقانه باشند
+    - حداکثر 2 جمله کوتاه
+    - یک ایموجی مناسب
+    - فارسی روان و شاعرانه
+  
+  first_visit_happy: |
+    یک پیام خلاقانه و الهام‌بخش برای یک {gender} {age} ساله که {emotion} است.
+    
+    پیام باید:
+    - خلاقانه و متفاوت
+    - به انرژی مثبت او اشاره کند
+    - الهام‌بخش باشد
+    - حداکثر 2 جمله
+    - یک ایموجی
+    - هیچ اشاره‌ای به "اولین بار" نباشد
+  
+  return_today: |
+    یک پیام الهام‌بخش برای یک {gender} {age} ساله که دوباره امروز برگشته.
+    احساس فعلی: {emotion}
+    
+    پیام باید:
+    1. شامل یک بیت زیبا از حافظ باشد
+    2. فرمت: "پیام حافظ برای امروزت: [بیت شعر] 🌟"
+    3. بیت باید کامل باشد (دو مصرع)
+    4. هیچ اشاره‌ای به دفعات بازدید نباشد
+
+# Hafez Poems (fallback when LLM unavailable)
+hafez_poems:
+  - "پیام حافظ برای امروزت: صبا به لطف بگو آن غزال رعنا را / که سر به کوه و بیابان تو داده‌ای ما را 🌟"
+  - "پیام حافظ برای امروزت: دل می‌رود ز دستم صاحب‌دلان خدا را / دریاب دل که می‌رود از دست دل‌ستانم 💫"
+  - "پیام حافظ برای امروزت: من ز خود برفتم و نیکو شدم / چون خودی دیدم دو تا شد درد و غم 🌙"
+  - "پیام حافظ برای امروزت: مرغ دل را گر هوای آشیان باشد چه باک / طایر عرش است بگذار تا به عرش می‌رود ✨"
+
+# UI Settings
+ui:
+  display_width: 1280
+  display_height: 720
+  message_duration: 5.0
+  show_fps: true
+  show_secondary_faces: false   # false = faster (don't blur/show others)
+  
+# Colors (BGR)
+colors:
+  primary: [0, 255, 0]
+  secondary: [128, 128, 128]
+  background: [0, 0, 0]
+  text: [255, 255, 255]
+  blur_box: [200, 200, 200]
+
+# Font Settings
+fonts:
+  face: 0  # cv2.FONT_HERSHEY_SIMPLEX
+  scale_large: 1.0
+  scale_medium: 0.7
+  scale_small: 0.5
+  thickness: 2
+
+# Emotion Translations
+emotions:
+  happy: "😊 خوشحال"
+  sad: "😢 غمگین"
+  angry: "😠 عصبانی"
+  surprise: "😲 متعجب"
+  fear: "😨 ترسیده"
+  neutral: "😐 خنثی"
+  disgust: "🤢 ناراحت"
+
+# Gender Translations
+genders:
+  Woman: "خانم"
+  Man: "آقا"
+
+# Debug
+debug: false
+
+# ============================================
+# Performance Presets (Copy one of these)
+# ============================================
+
+# PRESET 1: Maximum Speed (GTX 1650 - Exhibition)
+# camera: { width: 320, height: 240, fps: 15 }
+# face_detection: { use_yolo_if_gpu: false, frame_skip: 2, min_face_size: 120 }
+# face_analysis: { analyze_age: true, analyze_gender: true, analyze_emotion: false, analysis_interval: 15.0 }
+# ai_message: { enabled: false }
+# ui: { show_secondary_faces: false }
+# Expected FPS: 35-45 | GPU Memory: ~1.5GB
+
+# PRESET 2: Balanced (GTX 1650 - Good Quality)
+# camera: { width: 480, height: 360, fps: 20 }
+# face_detection: { use_yolo_if_gpu: false, frame_skip: 1, min_face_size: 100 }
+# face_analysis: { analyze_age: true, analyze_gender: true, analyze_emotion: true, analysis_interval: 8.0 }
+# ai_message: { enabled: false }
+# ui: { show_secondary_faces: false }
+# Expected FPS: 25-30 | GPU Memory: ~2GB
+
+# PRESET 3: Full Features (RTX 3060+ recommended)
+# camera: { width: 640, height: 480, fps: 30 }
+# face_detection: { use_yolo_if_gpu: true, frame_skip: 1, min_face_size: 80 }
+# face_analysis: { analyze_age: true, analyze_gender: true, analyze_emotion: true, analysis_interval: 2.5 }
+# ai_message: { enabled: true }
+# ui: { show_secondary_faces: true }
+# Expected FPS: 30+ | GPU Memory: ~3.5GB
